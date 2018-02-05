@@ -79,10 +79,10 @@ void AxisKdCell::countPointInBox(int& count, float min[3], float max[3]){
      }
    }
    else{
-     if(_fore != NULL && max[_s_axis] >= _middle)
+     if(_fore != nullptr && max[_s_axis] >= _middle)
        _fore->countPointInBox(count, min, max);
      
-     if(_back != NULL && min[_s_axis] <= _middle)
+     if(_back != nullptr && min[_s_axis] <= _middle)
        _back->countPointInBox(count, min, max);
    }
 }
@@ -105,10 +105,10 @@ void AxisKdCell::collectPointInBox(float (*point)[3], float *value,
      }
   }
    else{
-     if(_fore != NULL && max[_s_axis] >= _middle)
+     if(_fore != nullptr && max[_s_axis] >= _middle)
        _fore->collectPointInBox(point, value, count, min, max);
      
-     if(_back != NULL && min[_s_axis] <= _middle)
+     if(_back != nullptr && min[_s_axis] <= _middle)
        _back->collectPointInBox(point, value, count, min, max);
    }
 }
@@ -138,10 +138,10 @@ void AxisKdCell::getPointBound(float minP[3], float maxP[3], float min[3], float
      }
   }
    else{
-     if(_fore != NULL && max[_s_axis] >= _middle)
+     if(_fore != nullptr && max[_s_axis] >= _middle)
        _fore->getPointBound(minP, maxP, min, max);
      
-     if(_back != NULL && min[_s_axis] <= _middle)
+     if(_back != nullptr && min[_s_axis] <= _middle)
        _back->getPointBound(minP, maxP, min, max);
    }
 }

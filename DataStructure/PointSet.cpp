@@ -1,35 +1,22 @@
-// PointSet.cpp: PointSet ƒNƒ‰ƒX‚ÌƒCƒ“ƒvƒŠƒƒ“ƒe[ƒVƒ‡ƒ“
+// PointSet.cpp: PointSet ï¿½Nï¿½ï¿½ï¿½Xï¿½ÌƒCï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½eï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½
 //
 //////////////////////////////////////////////////////////////////////
-#include <afxwin.h>         // MFC ‚ÌƒRƒA‚¨‚æ‚Ñ•W€ƒRƒ“ƒ|[ƒlƒ“ƒg
-#include <afxext.h>         // MFC ‚ÌŠg’£•”•ª
-#include <afxdisp.h>        // MFC ‚ÌƒI[ƒgƒ[ƒVƒ‡ƒ“ ƒNƒ‰ƒX
-#include <afxdtctl.h>		// MFC ‚Ì Internet Explorer 4 ƒRƒ‚ƒ“ ƒRƒ“ƒgƒ[ƒ‹ ƒTƒ|[ƒg
-#ifndef _AFX_NO_AFXCMN_SUPPORT
-#include <afxcmn.h>			// MFC ‚Ì Windows ƒRƒ‚ƒ“ ƒRƒ“ƒgƒ[ƒ‹ ƒTƒ|[ƒg
-#endif // _AFX_NO_AFXCMN_SUPPORT
-
 #include "PointSet.h"
 #include "math.h"
-#include "../numericalC/jacobi.h"
+#include "jacobi.h"
 
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
-#endif
 
 //////////////////////////////////////////////////////////////////////
-// \’z/Á–Å
+// ï¿½\ï¿½z/ï¿½ï¿½ï¿½ï¿½
 //////////////////////////////////////////////////////////////////////
 
 PointSet::PointSet()
 {
-	point = NULL;
-	normal = NULL;
-	color = NULL;
-	value = NULL;
-	quad = NULL;
+	point = nullptr;
+	normal = nullptr;
+	color = nullptr;
+	value = nullptr;
+	quad = nullptr;
 }
 PointSet::PointSet(int N, float (*_point)[3], float (*_normal)[3])
 {
@@ -41,15 +28,15 @@ PointSet::PointSet(int N, float (*_point)[3], float (*_normal)[3])
 }
 PointSet::~PointSet()
 {
-	if(point != NULL)
+	if(point != nullptr)
 		delete[] point;
-	if(normal != NULL)
+	if(normal != nullptr)
 		delete[] normal;
-	if(color != NULL)
+	if(color != nullptr)
 		delete[] color;
-	if(value != NULL)
+	if(value != nullptr)
 		delete[] value;
-	if(quad != NULL){
+	if(quad != nullptr){
 		delete[] quad;
 		delete[] tangent1;
 		delete[] tangent2;
@@ -104,7 +91,7 @@ float PointSet::fitIntoBox(float ct[3], float boxSize)
 	float cX = (xMax + xMin) / 2.0f;
 	float cY = (yMax + yMin) / 2.0f;
 	float cZ = (zMax + zMin) / 2.0f;
-	
+
 	ct[0] = cX;	ct[1] = cY;	ct[2] = cZ;
 	int numVert = point_N;
 	for (int i = 0; i < numVert; i++){
@@ -132,7 +119,7 @@ void PointSet::swapIndex(int i, int j)
 	point[i][2] = point[j][2];
 	point[j][2] = tmp;
 
-	if(normal != NULL){
+	if(normal != nullptr){
 		tmp = normal[i][0];
 		normal[i][0] = normal[j][0];
 		normal[j][0] = tmp;
@@ -146,7 +133,7 @@ void PointSet::swapIndex(int i, int j)
 		normal[j][2] = tmp;
 	}
 
-	if(value != NULL){
+	if(value != nullptr){
 		tmp = value[i];
 		value[i] = value[j];
 		value[j] = tmp;
@@ -169,7 +156,7 @@ void PointSet::setPoint(int i, float x, float y, float z)
 
 void PointSet::setNormal(int i, float x, float y, float z)
 {
-    if(normal == NULL)
+    if(normal == nullptr)
       normal = new float[point_N][3];
 	normal[i][0] = x;
 	normal[i][1] = y;
@@ -177,7 +164,7 @@ void PointSet::setNormal(int i, float x, float y, float z)
 }
 void PointSet::setColor(int i, float r, float g, float b)
 {
-	if(color == NULL)
+	if(color == nullptr)
 		color = new float[point_N][3];
 	color[i][0] = r;
 	color[i][1] = g;
@@ -186,13 +173,13 @@ void PointSet::setColor(int i, float r, float g, float b)
 
 void PointSet::setValue(int i, float v)
 {
-	if(value == NULL)
+	if(value == nullptr)
 		value = new float[point_N];
 	value[i] = v;
 }
 
-void PointSet::getBound(float &xmin, float &xmax, 
-						 float &ymin, float &ymax, 
+void PointSet::getBound(float &xmin, float &xmax,
+						 float &ymin, float &ymax,
 						 float &zmin, float &zmax)
 {
 	xmin = point[0][0];
@@ -299,11 +286,11 @@ void PointSet::computeNormalWithCV(float n[3], int* list, int N, PointSet *pts)
 		tempPs = pts;
 
     float (*tempPoint)[3] = tempPs->point;
-    
+
     float cx = 0;
     float cy = 0;
     float cz = 0;
-    
+
     for(i=0; i<N; i++){
       float* p = tempPoint[list[i]];
       cx += p[0];
@@ -314,7 +301,7 @@ void PointSet::computeNormalWithCV(float n[3], int* list, int N, PointSet *pts)
     cx *= Ni;
     cy *= Ni;
     cz *= Ni;
-    
+
     //data for Jacobi method
     float **A = new float*[4];
     float **v = new float*[4];
@@ -325,31 +312,31 @@ void PointSet::computeNormalWithCV(float n[3], int* list, int N, PointSet *pts)
       A[i][1] = A[i][2] = A[i][3] = 0;
       v[i] = new float[4];
     }
-    
+
     //CV matrix
     for(i=0; i<N; i++){
       float* p = tempPoint[list[i]];
-      
+
       float vx = p[0] - cx;
       float vy = p[1] - cy;
       float vz = p[2] - cz;
-      
+
       A[1][1] += vx*vx;
       A[1][2] += vx*vy;
       A[1][3] += vx*vz;
-      
+
       A[2][2] += vy*vy;
       A[2][3] += vy*vz;
-      
+
       A[3][3] += vz*vz;
     }
     A[2][1] = A[1][2];
     A[3][1] = A[1][3];
     A[3][2] = A[3][2];
-    
+
     Jacobi jacobiSolver;
 	jacobiSolver.jacobi(A, 3, w, v, &nrot);
-    
+
     int mini;
     if(fabs(w[1]) < fabs(w[2]))
       mini = 1;
@@ -357,15 +344,15 @@ void PointSet::computeNormalWithCV(float n[3], int* list, int N, PointSet *pts)
       mini = 2;
     if(fabs(w[mini]) > fabs(w[3]))
       mini = 3;
-    
+
     n[0] = v[1][mini];
     n[1] = v[2][mini];
     n[2] = v[3][mini];
-    
+
     for(i=1; i<4; i++){
       delete[] A[i];
       delete[] v[i];
     }
     delete[] A;
-    delete[] v;	
+    delete[] v;
 }

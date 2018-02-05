@@ -1,25 +1,12 @@
-// PolygonalMesh.cpp: PolygonalMesh 
+// PolygonalMesh.cpp: PolygonalMesh
 //
 //////////////////////////////////////////////////////////////////////
-#include <afxwin.h>         
-#include <afxext.h>         
-#include <afxdisp.h>        
-#include <afxdtctl.h>		
-#ifndef _AFX_NO_AFXCMN_SUPPORT
-#include <afxcmn.h>			
-#endif // _AFX_NO_AFXCMN_SUPPORT
-
 #include "PolygonalMesh.h"
-#include "..\PQP\include\PQP.h"
+#include "PQP.h"
 
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
-#endif
 
 //////////////////////////////////////////////////////////////////////
-// 
+//
 //////////////////////////////////////////////////////////////////////
 
 PolygonalMesh::PolygonalMesh()
@@ -27,28 +14,28 @@ PolygonalMesh::PolygonalMesh()
 	face_N = 0;
 	vertex_N = 0;
 
-	vertex = NULL;
-	face = NULL;
+	vertex = nullptr;
+	face = nullptr;
 
-	degree_f = NULL;
+	degree_f = nullptr;
 
-	isBound = NULL;
+	isBound = nullptr;
 
-	normal_f = NULL;
-	normal = NULL;
+	normal_f = nullptr;
+	normal = nullptr;
 
-	center = NULL;
+	center = nullptr;
 
-	value = NULL;
-	isValid = NULL;
-	isCovered = NULL;
+	value = nullptr;
+	isValid = nullptr;
+	isCovered = nullptr;
 }
 
 PolygonalMesh::~PolygonalMesh()
 {
-	if(vertex != NULL)
+	if(vertex != nullptr)
 		delete[] vertex;
-	if(face != NULL){
+	if(face != nullptr){
 		for(int i=0; i<face_N; i++){
 			if(poly_N != 0)
 				delete[] face[i];
@@ -56,19 +43,19 @@ PolygonalMesh::~PolygonalMesh()
 		delete[] face;
 	}
 	delete[] poly_N;
-	if(normal != NULL)
+	if(normal != nullptr)
 		delete[] normal;
-	if(normal_f != NULL)
+	if(normal_f != nullptr)
 		delete[] normal_f;
 
-	if(center != NULL)
+	if(center != nullptr)
 		delete[] center;
 
-	if(value != NULL)
+	if(value != nullptr)
 		delete[] value;
-	if(isValid != NULL)
+	if(isValid != nullptr)
 		delete[] isValid;
-	if(isCovered != NULL)
+	if(isCovered != nullptr)
 		delete[] isCovered;
 
 }
@@ -90,7 +77,7 @@ void PolygonalMesh::setupTopologyInfo()	//just for triangular mesh
 		m_faceLinkInfo[i].m_isBound = false;
 		m_faceLinkInfo[i].m_linkEdgeIds.resize(3);
 	}
-	
+
 	//	setup the edge link information according the vertices link information
 	for(i = 0; i< vertex_N; i++)
 	{
@@ -153,10 +140,10 @@ void PolygonalMesh::setupTopologyInfo()	//just for triangular mesh
 		{
 			int vid = edge_link_info.m_linkVertIds[j];
 			m_vertLinkInfo[vid].m_linkEdgeIds.push_back(i);
-			
+
 			m_vertLinkInfo[vid].m_isBound = m_vertLinkInfo[vid].m_isBound || edge_link_info.m_isBound;
 		}
-		
+
 		for(j = 0; j< edge_link_info.m_linkFaceIds.size(); j++)	//	faces
 		{
 			int fid = edge_link_info.m_linkFaceIds[j];
@@ -214,7 +201,7 @@ void PolygonalMesh::setupTopologyInfo()	//just for triangular mesh
 
 void PolygonalMesh::setVertexCount(int vertex_N)
 {
-	if(vertex != NULL)
+	if(vertex != nullptr)
 		delete[] vertex;
 	this->vertex_N = vertex_N;
 	vertex = new float[vertex_N][3];
@@ -222,7 +209,7 @@ void PolygonalMesh::setVertexCount(int vertex_N)
 
 void PolygonalMesh::setFaceCount(int face_N)
 {
-	if(face != NULL){
+	if(face != nullptr){
 		delete[] face;
 		delete[] poly_N;
 	}
@@ -240,7 +227,7 @@ void PolygonalMesh::setPolygonCount(int index, int n)
 
 void PolygonalMesh::computeFaceNormal()
 {
-	if(normal_f == NULL)
+	if(normal_f == nullptr)
 		normal_f = new float[face_N][3];
 	for(int i=0; i<face_N; i++){
 		int n = poly_N[i];
@@ -270,7 +257,7 @@ void PolygonalMesh::computeFaceNormal()
 
 void PolygonalMesh::computeNormal()
 {
-	if(normal == NULL)
+	if(normal == nullptr)
 		normal = new float[vertex_N][3];
 	int i;
 	for(i=0; i<vertex_N; i++)
@@ -311,7 +298,7 @@ void PolygonalMesh::computeNormal()
 
 void PolygonalMesh::computeCenter()
 {
-	if(center == NULL)
+	if(center == nullptr)
 		center = new float[face_N][3];
 	for(int i=0; i<face_N; i++){
 		center[i][0] = center[i][1] = center[i][2] = 0;
@@ -328,7 +315,7 @@ void PolygonalMesh::computeCenter()
 }
 
 
-void PolygonalMesh::getBound(float &xmin, float &xmax, float &ymin, 
+void PolygonalMesh::getBound(float &xmin, float &xmax, float &ymin,
 							 float &ymax, float &zmin, float &zmax)
 {
 	xmin = vertex[0][0];
@@ -353,7 +340,7 @@ void PolygonalMesh::getBound(float &xmin, float &xmax, float &ymin,
 			zmax = vertex[i][2];
 		if(vertex[i][2] < zmin)
 			zmin = vertex[i][2];
-	}	
+	}
 }
 
 float PolygonalMesh::rescale(float ori[3], float scale)
@@ -401,7 +388,7 @@ float PolygonalMesh::fitIntoBox(float ct[3], float boxSize)
 	float cX = (xMax + xMin) / 2.0f;
 	float cY = (yMax + yMin) / 2.0f;
 	float cZ = (zMax + zMin) / 2.0f;
-	
+
 	ct[0] = cX;	ct[1] = cY;	ct[2] = cZ;
 	int numVert = vertex_N;
 	for (int i = 0; i < numVert; i++){
@@ -450,8 +437,8 @@ void PolygonalMesh::distanceFromPts(double &maxDis, double &avgDis, PointSet *pt
 		float *pn = pts->normal[i];
  		PQP_REAL p[3];
 		p[0] = pt[0];	p[1] = pt[1];	p[2] = pt[2];
-		PQP_Distance(&dres,pqp_meshModel, p,0.0,0.0);	
-		
+		PQP_Distance(&dres,pqp_meshModel, p,0.0,0.0);
+
 		if(maxD < dres.distance)
 			maxD = dres.distance;
 		avgD += dres.distance;

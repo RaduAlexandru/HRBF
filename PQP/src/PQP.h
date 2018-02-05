@@ -248,7 +248,7 @@ PQP_Collide(PQP_CollideResult *result,
 //
 //  "rel_err" is the relative error margin from actual distance.
 //  "abs_err" is the absolute error margin from actual distance.  The
-//  smaller of the two will be satisfied, so set one large to nullify
+//  smaller of the two will be satisfied, so set one large to nullptrify
 //  its effect.
 //
 //  "qsize" is an optional parameter controlling the size of a priority

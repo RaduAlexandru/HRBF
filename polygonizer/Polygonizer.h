@@ -1,13 +1,13 @@
-// Polygonizer.h: Polygonizer 
+// Polygonizer.h: Polygonizer
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "../DataStructure/PointSet.h"
-#include "../DataStructure/PolygonalMesh.h"
-#include "../numericalC/SVD.h"
+#include "PointSet.h"
+#include "PolygonalMesh.h"
+#include "SVD.h"
 #include "ImplicitFunction.h"
 
-class Polygonizer  
+class Polygonizer
 {
 public:
 	float spaceX, spaceY, spaceZ;
@@ -50,7 +50,7 @@ public:
 	*/
 
 	static inline double DET(double A[10]){
-		return A[0]*A[3]*A[5] + 2.0*A[1]*A[4]*A[2] 
+		return A[0]*A[3]*A[5] + 2.0*A[1]*A[4]*A[2]
 			-A[2]*A[2]*A[3] - A[1]*A[1]*A[5] - A[4]*A[4]*A[0];
 	}
 
@@ -139,7 +139,7 @@ public:
 		return v[0]*(A[0]*v[0] + A[1]*v[1] + A[2]*v[2]) +
 			   v[1]*(A[1]*v[0] + A[3]*v[1] + A[4]*v[2]) +
 			   v[2]*(A[2]*v[0] + A[4]*v[1] + A[5]*v[2]) +
-			   2.0*(A[6]*v[0] + A[7]*v[1] + A[8]*v[2]) + 
+			   2.0*(A[6]*v[0] + A[7]*v[1] + A[8]*v[2]) +
 			   A[9];
 	}
 
@@ -147,7 +147,7 @@ public:
 		return v[0]*(A[0]*v[0] + A[1]*v[1] + A[2]*v[2]) +
 			   v[1]*(A[1]*v[0] + A[3]*v[1] + A[4]*v[2]) +
 			   v[2]*(A[2]*v[0] + A[4]*v[1] + A[5]*v[2]) +
-			   2.0*(A[6]*v[0] + A[7]*v[1] + A[8]*v[2]) + 
+			   2.0*(A[6]*v[0] + A[7]*v[1] + A[8]*v[2]) +
 			   A[9];
 	}
 };

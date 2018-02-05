@@ -5,14 +5,17 @@
 #include <iostream>
 #include <string>
 #include <time.h>
-#include "../DataStructure/PointSet.h"
-#include "../DataStructure/PolygonalMesh.h"
+#include <cstring>
+#include "PointSet.h"
+#include "PolygonalMesh.h"
 #include "FileManager.h"
-#include "../polygonizer/Polygonizer.h"
-#include "../DataStructure/OctTree.h"
+#include "Polygonizer.h"
+#include "OctTree.h"
 #include "HRBF.h"
 #include "MeshCleaner.h"
 #include "omp.h"
+
+#include <fstream>
 
 #define PI 3.14159265
 
@@ -23,19 +26,42 @@ int main(int argc, char* argv[])
     std::cout << "Hermite RBF-based Reconstruction "
         << "(built on " __DATE__ ", " __TIME__ ")." << std::endl;
 
+// ./HRBFQI /media/alex/Data/Master/SHK/c_ws/src/laser_mesher/aggregated_clouds/points_aggregated_for_poisson_all.pwn /media/alex/Data/Master/SHK/c_ws/src/laser_mesher/aggregated_clouds/hrbf.obj 1 0 1 0.1 0.3 0.5 5
+
+// ./HRBFQI /media/alex/Data/Master/Thesis/HRBFQI/Bin/Data/torus.pwn /media/alex/Data/Master/Thesis/HRBFQI/Bin/Data/torus.obj 1 0 1 0.1 0.3 0.5 5
+
+
+//1scan
+// ./HRBFQI /media/alex/Data/Master/SHK/c_ws/src/laser_mesher/aggregated_clouds/points_1_scan.pwn ./hrbf.obj 1 0 0.15 0.1 0.01 0.000001 1
+
+//5 scan
+//./HRBFQI /media/alex/Data/Master/SHK/c_ws/src/laser_mesher/aggregated_clouds/points_5_scan.pwn ./hrbf.obj 1 0 0.4 0.1 0.01 0.000001 1
+
+//all of them but using the delaunay mesh so sligthly decimated (needed to reduce stepsize isosrface)
+// ./HRBFQI /media/alex/Data/Master/SHK/c_ws/src/laser_mesher/aggregated_clouds/points_aggregated_for_poisson_decimated_1_0.pwn ./hrbf.obj 1 0 1.01 0.000001 0.005 0.000001 1
+
+//./HRBFQI /media/alex/Data/Master/SHK/c_ws/src/laser_mesher/aggregated_clouds/points_aggregated_for_poisson_decimated_1_0.pwn ./hrbf.obj 1 0 1.01 0.000001 0.005 0.000001 1
+
+
+
+//agregated with the new agregator
+//delaunay mesh so slighly decimated
+// ./HRBFQI /media/alex/Data/Master/SHK/c_ws/src/laser_agregator/pwn_clouds/cloud.pwn ./hrbf.obj 1 0 1.01 0.000001 0.005 0.000001 1
+
+
 
 	if(argc != 10)
 	{
 		cout<<"HBRFQI inputfile.pwn(.pwnc) outputfile.obj <if_rescale> <if_output_difference_gradient_normal> <support_size_scale>"<<
 			" <parameter_eta> <isosurface_extract_stepsize> <confidence_threshold> <component_size>"<<endl;
 		return 1;
-	}	
+	}
 
 	//	set parameter values
 	double supportSizeScale, etaValue, gridEdgeLen, confThreshold;
 	bool ifRescale, ifOutputDifferenceGradientNormal;
 	int componentSize;
-	
+
 	ifRescale = atoi(argv[3]);
 	ifOutputDifferenceGradientNormal = atoi(argv[4]);
 	supportSizeScale = atof(argv[5]);
@@ -52,17 +78,22 @@ int main(int argc, char* argv[])
 	float fCenter[3] = {0.0f, 0.0f, 0.0f};
 	cout<<"********************************************************************"<<endl;
 	cout<<"Read points file..."<<argv[1]<<endl;
-	char input_filename[256];
-	strcpy(input_filename,"Data\\");
-	strcat(input_filename,argv[1]);
-//	int length=strlen(filename);
-	FILE* file;
-	if(strstr(argv[1], ".pwn") != NULL)
+
+	std::string input_filename= argv[1];
+	if(strstr(argv[1], ".pwn") != nullptr)
 	{
-		file = fopen(input_filename,"r");
-		file_manager->setFile(file, input_filename, "pwn");
-		file_manager->open(ps);
-		fclose(file);
+        std::ifstream file(input_filename);
+		// file = fopen(input_filename,"r");
+        // std::cout << "file opened is " << file << '\n';
+        // if (nullptr == file) {
+        //     fprintf(stderr,
+        //     "Could not open: %s. %s\n",
+        //     input_filename,
+        //     strerror(errno));
+        // }
+		// file_manager->setFile(file, input_filename, "pwn");
+		file_manager->open(file,ps);
+		file.close();
 	}
 	else
 	{
@@ -89,8 +120,9 @@ int main(int argc, char* argv[])
 	//Estimation of recommended support size
 	float T = 0.75*hrbf->getAveragedLeafSize();
 //	cout<<"The initial support radius: "<< T <<endl;
-	
+
 	hrbf->support = supportSizeScale*T;
+    std::cout << "support is" << hrbf->support << '\n';
 	T = hrbf->support;
 
 	float normal_smooth;
@@ -107,7 +139,7 @@ int main(int argc, char* argv[])
 	//cout<<"The final support radius: "<< hrbf->support<<endl;
 	//int neighborNum = hrbf->getMaximalNeighborsInSupport(hrbf->support);	//	Compute a maximal neighbor number according to the given support size
 	//cout<<"The maximal neighbor number: "<< neighborNum<< endl;
-	//float rho_min = (5.0*neighborNum+sqrt(25.0*neighborNum*neighborNum+2240.0*(1+normal_smooth)))/(8.0*(1.0+normal_smooth)); 
+	//float rho_min = (5.0*neighborNum+sqrt(25.0*neighborNum*neighborNum+2240.0*(1+normal_smooth)))/(8.0*(1.0+normal_smooth));
 	//cout<<"The parameter: "<< normal_smooth<< endl;//fit_dia->m_normal_smooth
 	//cout<<"The minimal support radius: "<< rho_min<<endl;
 	}
@@ -121,7 +153,7 @@ int main(int argc, char* argv[])
 	float bound_X = x_max - x_min;
 	float bound_Y = y_max - y_min;
 	float bound_Z = z_max - z_min;
-	float grid_size = gridEdgeLen; 
+	float grid_size = gridEdgeLen;
 
 	float space = grid_size;
 
@@ -139,11 +171,11 @@ int main(int argc, char* argv[])
 	poly->dimY = (int)((bound_Y)/space) + 10;
 	poly->dimZ = (int)((bound_Z)/space) + 10;
 
-	poly->func = hrbf;			
+	poly->func = hrbf;
 
 	PolygonalMesh *mesh;
-	mesh = NULL;
-	mesh = poly->dualContouring(0.001f, 0.01f); 
+	mesh = nullptr;
+	mesh = poly->dualContouring(0.001f, 0.01f);
 
 	cout<<"Done!"<<endl;
 	if(!ifOutputDifferenceGradientNormal)
@@ -178,7 +210,7 @@ int main(int argc, char* argv[])
 	{
 		CMeshCleaner *meshCleaner = new CMeshCleaner;
 		PolygonalMesh *newMesh;
-		newMesh = NULL;
+		newMesh = nullptr;
 
 		cout<<endl<<"********************************************************************"<<endl;
 		cout<<"Mesh cleaning..."<<endl;
@@ -202,7 +234,7 @@ int main(int argc, char* argv[])
 		{
 			cout<<"--------------------------"<<endl;
 			cout<<"Removing isolated components with < " << componentSize << " vertices..." <<endl;
-			
+
 			mesh = newMesh;
 			start = clock();
 			newMesh = meshCleaner->removeSmallIsolatedComponent(mesh, componentSize);
@@ -222,18 +254,16 @@ int main(int argc, char* argv[])
 	cout<<endl<<"********************************************************************"<<endl;
 	cout<<"Write mesh file..."<<endl;
 
-	if(mesh == NULL || mesh->face_N == 0)
+	if(mesh == nullptr || mesh->face_N == 0)
 		return 1;
-	char output_filename[256];
-	strcpy(output_filename,"Data\\");
-	strcat(output_filename,argv[2]);
-
-	file = fopen(output_filename,"w");
-	file_manager->setFile(file, output_filename, "obj");
+	std::string output_filename;
+    output_filename=argv[2];
+    std::ofstream file_out(output_filename);
+	// file_manager->setFile(file, output_filename, "obj");
 //	float tempCenter[3] = {0,0,0};
-	file_manager->save(mesh, fCenter, fScale);//mesh, tempCenter);
+	file_manager->saveWaveFront(file_out, mesh, fCenter, fScale);//mesh, tempCenter);
 
-	fclose(file);
+    file_out.close();
 	cout<<argv[2]<<": file output finished!"<<endl;
 	cout<<mesh->vertex_N <<" vertices and " << mesh->face_N << " triangles output."<<endl;
 	cout<<endl<<"********************************************************************"<<endl;
@@ -244,9 +274,8 @@ int main(int argc, char* argv[])
 	delete hrbf;
 	delete poly;
 	delete file_manager;
-	
+
 	cout<<"Press Enter to return!"<<endl;
 	getchar();
     return 0;
 }
-

@@ -1,10 +1,10 @@
 #pragma once
-#include "../DataStructure/PointSet.h"
-#include "../DataStructure/OctTree.h"
+#include "PointSet.h"
+#include "OctTree.h"
 #include "math.h"
-#include "../DataStructure/PolygonalMesh.h"
-#include "../numericalC/SVD.h"
-#include "../polygonizer/ImplicitFunction.h"
+#include "PolygonalMesh.h"
+#include "SVD.h"
+#include "ImplicitFunction.h"
 
 class HRBF :
 	public ImplicitFunction
@@ -15,7 +15,7 @@ public:
 	float support;
 
 	//Shift amount
-	double *sol;						
+	double *sol;
 
 	//	------------------------------------
 	int maxNeighborNumber;
@@ -51,7 +51,8 @@ public:
 	inline void weightDH(float g[], float h[], double d2, float vx, float vy, float vz);
 	inline void weightDH(float *w, float g[], float h[], double d2, float vx, float vy, float vz);
 
-	inline double weight(double d2);
+	double weight(double d2);
+	double wtf(double d2);
 
 	//Visualizations
 	PolygonalMesh* generateCrossSection(float o[3], float t1[3], float t2[3], int n, int m);

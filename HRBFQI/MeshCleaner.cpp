@@ -1,5 +1,5 @@
-#include "StdAfx.h"
 #include "MeshCleaner.h"
+#include <cstring>
 
 CMeshCleaner::CMeshCleaner(void)
 {
@@ -11,8 +11,8 @@ CMeshCleaner::~CMeshCleaner(void)
 
 PolygonalMesh * CMeshCleaner::removeLowConfidenceGeometry(PolygonalMesh *oriMesh, HRBF *func, float confThreshold)
 {
-	if(oriMesh == NULL || func == NULL)
-		return NULL;
+	if(oriMesh == nullptr || func == nullptr)
+		return nullptr;
 
 	float thresholdConf = confThreshold;
 
@@ -40,7 +40,7 @@ PolygonalMesh * CMeshCleaner::removeLowConfidenceGeometry(PolygonalMesh *oriMesh
 			double r2 =( func->ps->point[id][0]-c[0])*( func->ps->point[id][0]-c[0])+( func->ps->point[id][1]-c[1])*(func->ps->point[id][1]-c[1])
 				+( func->ps->point[id][2]-c[2])*(func->ps->point[id][2]-c[2]);
 			conf[i] += func->weight(r2);
-		}		
+		}
 	}
 
 	//---------------------------------------------------
@@ -68,14 +68,14 @@ PolygonalMesh * CMeshCleaner::removeLowConfidenceGeometry(PolygonalMesh *oriMesh
 	for(i = 0; i< vertex_N; i++)
 	{
 		move_ahead_number[i] = move_number;
-		id_corresponding[i] = i-move_ahead_number[i];		
+		id_corresponding[i] = i-move_ahead_number[i];
 		if(conf[i]<thresholdConf)
 		{
 			move_number ++;
 		}
 	}
 	delete[] move_ahead_number;
-	
+
 	//	update the mesh
 	PolygonalMesh *newMesh = new PolygonalMesh();
 	newMesh->setVertexCount(vertex_N-move_number);
@@ -127,7 +127,7 @@ PolygonalMesh * CMeshCleaner::removeSmallIsolatedComponent(PolygonalMesh *oriMes
 	vector<INTVECTOR> patches;
 
 	int i;
-	
+
 	int vertexN = oriMesh->vertex_N;
 	int faceN = oriMesh->face_N;
 
@@ -176,7 +176,7 @@ PolygonalMesh * CMeshCleaner::removeSmallIsolatedComponent(PolygonalMesh *oriMes
 
 		patches.push_back(patch);
 	}
-	
+
 	//---------------------------------------------------
 
 	//	determine the invalid vertices and faces
@@ -195,7 +195,7 @@ PolygonalMesh * CMeshCleaner::removeSmallIsolatedComponent(PolygonalMesh *oriMes
 //		cout<<i<<"patch size: "<< patchSize<< endl;
 		if(patchSize < componentSize)
 		{
-			int j; 
+			int j;
 			for(j = 0; j< patchSize; j++)
 			{
 				int vid = patch[j];
@@ -226,7 +226,7 @@ PolygonalMesh * CMeshCleaner::removeSmallIsolatedComponent(PolygonalMesh *oriMes
 	for(i = 0; i< vertexN; i++)
 	{
 		move_ahead_number[i] = move_number;
-		id_corresponding[i] = i-move_ahead_number[i];		
+		id_corresponding[i] = i-move_ahead_number[i];
 		if(invalid_vertices[i])
 		{
 			move_number ++;
@@ -234,7 +234,7 @@ PolygonalMesh * CMeshCleaner::removeSmallIsolatedComponent(PolygonalMesh *oriMes
 	}
 
 	delete[] move_ahead_number;
-	
+
 	//	update the mesh
 	PolygonalMesh *newMesh = new PolygonalMesh();
 	newMesh->setVertexCount(vertexN-move_number);

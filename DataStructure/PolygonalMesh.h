@@ -1,12 +1,7 @@
-// PolygonalMesh.h: PolygonalMesh 
+// PolygonalMesh.h: PolygonalMesh
 //////////////////////////////////////////////////////////////////////
 
-#if !defined(AFX_POLYGONALMESH_H__B935C905_B5B1_4EC0_A79E_B24D736D1879__INCLUDED_)
-#define AFX_POLYGONALMESH_H__B935C905_B5B1_4EC0_A79E_B24D736D1879__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 
 #include <math.h>
 #include <vector>
@@ -34,7 +29,7 @@ struct FACE_LINK_INFO
 	bool m_isBound;
 };
 
-class PolygonalMesh  
+class PolygonalMesh
 {
 public:
 	//	Other topology information
@@ -57,7 +52,7 @@ public:
 	float (*center)[3];
 
 	//Is the vertex specified a index boundary?
-	//value = 0 if not boundary 
+	//value = 0 if not boundary
 	//velue = index of adjacent boundary face
 	int *isBound;
 
@@ -85,145 +80,145 @@ public:
 	virtual ~PolygonalMesh();
 
 
-	static inline double PolygonalMesh::LENGTH(float v[3]){
+	static inline double LENGTH(float v[3]){
 		return sqrt((double)v[0]*(double)v[0] + (double)v[1]*(double)v[1] + (double)v[2]*(double)v[2]);
 	}
 
-	static inline double PolygonalMesh::LENGTH(double v[3]){
+	static inline double LENGTH(double v[3]){
 		return sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
 	}
 
-	static inline void PolygonalMesh::VEC(float v[3], float p1[3], float p2[3]){
+	static inline void VEC(float v[3], float p1[3], float p2[3]){
 		v[0] = p2[0]-p1[0];
 		v[1] = p2[1]-p1[1];
 		v[2] = p2[2]-p1[2];
 	}
 
-	static inline void PolygonalMesh::VEC(double v[3], float p1[3], float p2[3]){
+	static inline void VEC(double v[3], float p1[3], float p2[3]){
 		v[0] = p2[0]-p1[0];
 		v[1] = p2[1]-p1[1];
 		v[2] = p2[2]-p1[2];
 	}
 
-	static inline void PolygonalMesh::VEC(double v[3], double p1[3], double p2[3]){
+	static inline void VEC(double v[3], double p1[3], double p2[3]){
 		v[0] = p2[0]-p1[0];
 		v[1] = p2[1]-p1[1];
 		v[2] = p2[2]-p1[2];
 	}
 
-	static inline void PolygonalMesh::VEC(double v[3], double p1[3], float p2[3]){
+	static inline void VEC(double v[3], double p1[3], float p2[3]){
 		v[0] = (double)p2[0]-p1[0];
 		v[1] = (double)p2[1]-p1[1];
 		v[2] = (double)p2[2]-p1[2];
 	}
 
-	static inline void PolygonalMesh::VEC(double v[3], float p1[3], double p2[3]){
+	static inline void VEC(double v[3], float p1[3], double p2[3]){
 		v[0] = p2[0]-(double)p1[0];
 		v[1] = p2[1]-(double)p1[1];
 		v[2] = p2[2]-(double)p1[2];
 	}
-	
-	static inline void PolygonalMesh::TIMES(float kv[3], float k, float v[3]){
+
+	static inline void TIMES(float kv[3], float k, float v[3]){
 		kv[0] = k*v[0];
 		kv[1] = k*v[1];
 		kv[2] = k*v[2];
 	}
 
-	static inline double PolygonalMesh::DIST(float p1[3], float p2[3]){
+	static inline double DIST(float p1[3], float p2[3]){
 		float v[3];
 		VEC(v,p1,p2);
 		return LENGTH(v);
 	}
 
-	static inline double PolygonalMesh::DIST(double p1[3], double p2[3]){
+	static inline double DIST(double p1[3], double p2[3]){
 		double v[3];
 		VEC(v,p1,p2);
 		return LENGTH(v);
 	}
 
-	static inline double PolygonalMesh::DIST2(float p1[3], float p2[3]){
+	static inline double DIST2(float p1[3], float p2[3]){
 		float v[3];
 		VEC(v,p1,p2);
 		return v[0]*v[0] + v[1]*v[1] + v[2]*v[2];
 	}
 
-	static inline double PolygonalMesh::DIST2(double p1[3], double p2[3]){
+	static inline double DIST2(double p1[3], double p2[3]){
 		double v[3];
 		VEC(v,p1,p2);
 		return v[0]*v[0] + v[1]*v[1] + v[2]*v[2];
 	}
 
-	static inline double PolygonalMesh::DIST2(double p1[3], float p2[3]){
+	static inline double DIST2(double p1[3], float p2[3]){
 		double v[3];
 		VEC(v,p1,p2);
 		return v[0]*v[0] + v[1]*v[1] + v[2]*v[2];
 	}
 
-	static inline double PolygonalMesh::DOT(float v1[3], float v2[3]){
+	static inline double DOT(float v1[3], float v2[3]){
 		return (double)v1[0]*(double)v2[0] + (double)v1[1]*(double)v2[1] + (double)v1[2]*(double)v2[2];
 	}
 
-	static inline double PolygonalMesh::DOT(double v1[3], float v2[3]){
+	static inline double DOT(double v1[3], float v2[3]){
 		return v1[0]*(double)v2[0] + v1[1]*(double)v2[1] + v1[2]*(double)v2[2];
 	}
 
-	static inline double PolygonalMesh::DOT(float v1[3], double v2[3]){
+	static inline double DOT(float v1[3], double v2[3]){
 		return (double)v1[0]*v2[0] + (double)v1[1]*v2[1] + (double)v1[2]*v2[2];
 	}
 
-	static inline double PolygonalMesh::DOT(double v1[3], double v2[3]){
+	static inline double DOT(double v1[3], double v2[3]){
 		return v1[0]*v2[0] + v1[1]*v2[1] + v1[2]*v2[2];
 	}
 
-	static inline void PolygonalMesh::CROSS(float n[3], float v1[3], float v2[3]){
+	static inline void CROSS(float n[3], float v1[3], float v2[3]){
 		n[0] = v1[1]*v2[2] - v1[2]*v2[1];
 		n[1] = v1[2]*v2[0] - v1[0]*v2[2];
 		n[2] = v1[0]*v2[1] - v1[1]*v2[0];
 	}
 
-	static inline void PolygonalMesh::CROSS(double n[3], double v1[3], double v2[3]){
+	static inline void CROSS(double n[3], double v1[3], double v2[3]){
 		n[0] = v1[1]*v2[2] - v1[2]*v2[1];
 		n[1] = v1[2]*v2[0] - v1[0]*v2[2];
 		n[2] = v1[0]*v2[1] - v1[1]*v2[0];
 	}
 
-	static inline void PolygonalMesh::CROSS(double n[3], float v1[3], float v2[3]){
+	static inline void CROSS(double n[3], float v1[3], float v2[3]){
 		n[0] = (double)v1[1]*(double)v2[2] - (double)v1[2]*(double)v2[1];
 		n[1] = (double)v1[2]*(double)v2[0] - (double)v1[0]*(double)v2[2];
 		n[2] = (double)v1[0]*(double)v2[1] - (double)v1[1]*(double)v2[0];
 	}
 
-	static inline void PolygonalMesh::CROSS(double n[3], double v1[3], float v2[3]){
+	static inline void CROSS(double n[3], double v1[3], float v2[3]){
 		n[0] = v1[1]*(double)v2[2] - v1[2]*(double)v2[1];
 		n[1] = v1[2]*(double)v2[0] - v1[0]*(double)v2[2];
 		n[2] = v1[0]*(double)v2[1] - v1[1]*(double)v2[0];
 	}
 
-	static inline void PolygonalMesh::CROSS(double n[3], float v1[3], double v2[3]){
+	static inline void CROSS(double n[3], float v1[3], double v2[3]){
 		n[0] = (double)v1[1]*v2[2] - (double)v1[2]*v2[1];
 		n[1] = (double)v1[2]*v2[0] - (double)v1[0]*v2[2];
 		n[2] = (double)v1[0]*v2[1] - (double)v1[1]*v2[0];
 	}
 
-	static inline void PolygonalMesh::CROSS(float n[3], double v1[3], double v2[3]){
+	static inline void CROSS(float n[3], double v1[3], double v2[3]){
 		n[0] = (float)(v1[1]*v2[2] - v1[2]*v2[1]);
 		n[1] = (float)(v1[2]*v2[0] - v1[0]*v2[2]);
 		n[2] = (float)(v1[0]*v2[1] - v1[1]*v2[0]);
 	}
 
-	static inline void PolygonalMesh::CROSS(float n[3], double v1[3], float v2[3]){
+	static inline void CROSS(float n[3], double v1[3], float v2[3]){
 		n[0] = (float)(v1[1]*v2[2] - v1[2]*v2[1]);
 		n[1] = (float)(v1[2]*v2[0] - v1[0]*v2[2]);
 		n[2] = (float)(v1[0]*v2[1] - v1[1]*v2[0]);
 	}
 
-	static inline void PolygonalMesh::CROSS(float n[3], float v1[3], double v2[3]){
+	static inline void CROSS(float n[3], float v1[3], double v2[3]){
 		n[0] = (float)(v1[1]*v2[2] - v1[2]*v2[1]);
 		n[1] = (float)(v1[2]*v2[0] - v1[0]*v2[2]);
 		n[2] = (float)(v1[0]*v2[1] - v1[1]*v2[0]);
 	}
 
-	static inline double PolygonalMesh::AREA(float p1[3], float p2[3], float p3[3])
+	static inline double AREA(float p1[3], float p2[3], float p3[3])
 	{
 		double n[3];
 		float v1[3], v2[3];
@@ -234,7 +229,7 @@ public:
 		return 0.5*LENGTH(n);
 	}
 
-	static inline double PolygonalMesh::AREA(double p1[3], double p2[3], double p3[3])
+	static inline double AREA(double p1[3], double p2[3], double p3[3])
 	{
 		double n[3];
 		double v1[3], v2[3];
@@ -245,7 +240,7 @@ public:
 		return 0.5*LENGTH(n);
 	}
 
-	static inline double PolygonalMesh::AREA(float p1[3], float p2[3], double p3[3])
+	static inline double AREA(float p1[3], float p2[3], double p3[3])
 	{
 		double n[3];
 		float v1[3];
@@ -257,5 +252,3 @@ public:
 		return 0.5*LENGTH(n);
 	}
 };
-
-#endif // !defined(AFX_POLYGONALMESH_H__B935C905_B5B1_4EC0_A79E_B24D736D1879__INCLUDED_)

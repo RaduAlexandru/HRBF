@@ -1,47 +1,33 @@
-// OctTree.cpp: OctTree 
+// OctTree.cpp: OctTree
 //
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
-#include <afxwin.h>         //  
-#include <afxext.h>         // 
-#include <afxdisp.h>        // 
-#include <afxdtctl.h>		// 
-#ifndef _AFX_NO_AFXCMN_SUPPORT
-#include <afxcmn.h>			//
-#endif // _AFX_NO_AFXCMN_SUPPORT
-
-#include "windows.h"
 #include "OctTree.h"
 
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
-#endif
-
 #include "math.h"
+#include <algorithm>
 
 //////////////////////////////////////////////////////////////////////
-// 
+//
 //////////////////////////////////////////////////////////////////////
 
 OctTree::OctTree()
 {
-	root = NULL;
-	table = NULL;
-	point_list = NULL;
-	normal_list = NULL;
+	root = nullptr;
+	table = nullptr;
+	point_list = nullptr;
+	normal_list = nullptr;
 }
 
 OctTree::~OctTree()
 {
-	if(root != NULL)
+	if(root != nullptr)
 		delete root;
-	if(table != NULL)
+	if(table != nullptr)
 		delete table;
-	if(point_list != NULL)
+	if(point_list != nullptr)
 		delete[] point_list;
-	if(normal_list != NULL)
+	if(normal_list != nullptr)
 		delete[] normal_list;
 }
 
@@ -83,7 +69,7 @@ void OctTree::Cell::createChild(float sizeX, float sizeY, float sizeZ){
 OctTree::Cell::~Cell(){
 	if(!isLeaf){
 		for(int i=0; i<8; i++){
-			if(child[i] != NULL)
+			if(child[i] != nullptr)
 				delete child[i];
 		}
 	}
@@ -112,10 +98,10 @@ void OctTree::setPointSet(PointSet *ps)
 {
 	this->ps = ps;
 	int point_N = ps->point_N;
-	
+
 	float xmin, xmax, ymin, ymax, zmin, zmax;
 	ps->getBound(xmin, xmax, ymin, ymax, zmin, zmax);
-	float size = max(xmax-xmin, max(ymax-ymin, zmax-zmin));
+	float size = std::max(xmax-xmin, std::max(ymax-ymin, zmax-zmin));
 
 	/*
 	sizeX = size; //(xmax-xmin);
@@ -188,7 +174,7 @@ bool OctTree::getIndexTable(int *table, int &tableSize, float x, float y, float 
 	root->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
 	return true;
 }
-void OctTree::Cell::addIntoTable(PointSet* ps, int *table, int &tableSize, float x, float y, float z, float r, 
+void OctTree::Cell::addIntoTable(PointSet* ps, int *table, int &tableSize, float x, float y, float z, float r,
 								 float sizeX, float sizeY, float sizeZ)
 {
 	if(isLeaf){
@@ -206,57 +192,57 @@ void OctTree::Cell::addIntoTable(PointSet* ps, int *table, int &tableSize, float
 	if(x + r < cx){
 		if(y + r < cy){
 			if(z + r < cz){
-				if(child[0] != NULL)
+				if(child[0] != nullptr)
 					child[0]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
 			}
 			else if(z - r >= cz){
-				if(child[4] != NULL)
+				if(child[4] != nullptr)
 					child[4]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
 			}
 			else{
-				if(child[0] != NULL)
+				if(child[0] != nullptr)
 					child[0]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[4] != NULL)
+				if(child[4] != nullptr)
 					child[4]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
 			}
 		}
 		else if(y - r >= cy){
 			if(z + r < cz){
-				if(child[2] != NULL)
+				if(child[2] != nullptr)
 					child[2]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
 			}
 			else if(z - r >= cz){
-				if(child[6] != NULL)
+				if(child[6] != nullptr)
 					child[6]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
 			}
 			else{
-				if(child[2] != NULL)
+				if(child[2] != nullptr)
 					child[2]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[6] != NULL)
+				if(child[6] != nullptr)
 					child[6]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
 			}
 		}
 		else{
 			if(z + r < cz){
-				if(child[0] != NULL)
+				if(child[0] != nullptr)
 					child[0]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[2] != NULL)
+				if(child[2] != nullptr)
 					child[2]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
 			}
 			else if(z - r >= cz){
-				if(child[4] != NULL)
+				if(child[4] != nullptr)
 					child[4]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[6] != NULL)
+				if(child[6] != nullptr)
 					child[6]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
 			}
 			else{
-				if(child[0] != NULL)
+				if(child[0] != nullptr)
 					child[0]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[4] != NULL)
+				if(child[4] != nullptr)
 					child[4]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[2] != NULL)
+				if(child[2] != nullptr)
 					child[2]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[6] != NULL)
+				if(child[6] != nullptr)
 					child[6]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
 			}
 		}
@@ -264,57 +250,57 @@ void OctTree::Cell::addIntoTable(PointSet* ps, int *table, int &tableSize, float
 	else if(x -r >= cx){
 		if(y + r < cy){
 			if(z + r < cz){
-				if(child[1] != NULL)
+				if(child[1] != nullptr)
 					child[1]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
 			}
 			else if(z - r >= cz){
-				if(child[5] != NULL)
+				if(child[5] != nullptr)
 					child[5]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
 			}
 			else{
-				if(child[1] != NULL)
+				if(child[1] != nullptr)
 					child[1]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[5] != NULL)
+				if(child[5] != nullptr)
 					child[5]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
 			}
 		}
 		else if(y - r >= cy){
 			if(z + r < cz){
-				if(child[3] != NULL)
+				if(child[3] != nullptr)
 					child[3]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
 			}
 			else if(z - r >= cz){
-				if(child[7] != NULL)
+				if(child[7] != nullptr)
 					child[7]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
 			}
 			else{
-				if(child[3] != NULL)
+				if(child[3] != nullptr)
 					child[3]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[7] != NULL)
+				if(child[7] != nullptr)
 					child[7]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
 			}
 		}
 		else{
 			if(z + r < cz){
-				if(child[1] != NULL)
+				if(child[1] != nullptr)
 					child[1]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[3] != NULL)
+				if(child[3] != nullptr)
 					child[3]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
 			}
 			else if(z - r >= cz){
-				if(child[5] != NULL)
+				if(child[5] != nullptr)
 					child[5]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[7] != NULL)
+				if(child[7] != nullptr)
 					child[7]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
 			}
 			else{
-				if(child[1] != NULL)
+				if(child[1] != nullptr)
 					child[1]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[5] != NULL)
+				if(child[5] != nullptr)
 					child[5]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[3] != NULL)
+				if(child[3] != nullptr)
 					child[3]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[7] != NULL)
+				if(child[7] != nullptr)
 					child[7]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
 			}
 		}
@@ -322,89 +308,89 @@ void OctTree::Cell::addIntoTable(PointSet* ps, int *table, int &tableSize, float
 	else{
 		if(y + r < cy){
 			if(z + r < cz){
-				if(child[0] != NULL)
+				if(child[0] != nullptr)
 					child[0]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[1] != NULL)
+				if(child[1] != nullptr)
 					child[1]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
 			}
 			else if(z - r >= cz){
-				if(child[4] != NULL)
+				if(child[4] != nullptr)
 					child[4]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[5] != NULL)
+				if(child[5] != nullptr)
 					child[5]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
 			}
 			else{
-				if(child[0] != NULL)
+				if(child[0] != nullptr)
 					child[0]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[1] != NULL)
+				if(child[1] != nullptr)
 					child[1]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[4] != NULL)
+				if(child[4] != nullptr)
 					child[4]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[5] != NULL)
+				if(child[5] != nullptr)
 					child[5]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
 			}
 		}
 		else if(y - r >= cy){
 			if(z + r < cz){
-				if(child[2] != NULL)
+				if(child[2] != nullptr)
 					child[2]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[3] != NULL)
+				if(child[3] != nullptr)
 					child[3]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
 			}
 			else if(z - r >= cz){
-				if(child[6] != NULL)
+				if(child[6] != nullptr)
 					child[6]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[7] != NULL)
+				if(child[7] != nullptr)
 					child[7]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
 			}
 			else{
-				if(child[2] != NULL)
+				if(child[2] != nullptr)
 					child[2]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[3] != NULL)
+				if(child[3] != nullptr)
 					child[3]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[6] != NULL)
+				if(child[6] != nullptr)
 					child[6]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[7] != NULL)
+				if(child[7] != nullptr)
 					child[7]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
 			}
 		}
 		else{
 			if(z + r < cz){
-				if(child[0] != NULL)
+				if(child[0] != nullptr)
 					child[0]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[1] != NULL)
+				if(child[1] != nullptr)
 					child[1]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[2] != NULL)
+				if(child[2] != nullptr)
 					child[2]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[3] != NULL)
+				if(child[3] != nullptr)
 					child[3]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
 			}
 			else if(z - r >= cz){
-				if(child[4] != NULL)
+				if(child[4] != nullptr)
 					child[4]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[5] != NULL)
+				if(child[5] != nullptr)
 					child[5]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[6] != NULL)
+				if(child[6] != nullptr)
 					child[6]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[7] != NULL)
+				if(child[7] != nullptr)
 					child[7]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
 			}
 			else{
-				if(child[0] != NULL)
+				if(child[0] != nullptr)
 					child[0]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[1] != NULL)
+				if(child[1] != nullptr)
 					child[1]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[2] != NULL)
+				if(child[2] != nullptr)
 					child[2]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[3] != NULL)
+				if(child[3] != nullptr)
 					child[3]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[4] != NULL)
+				if(child[4] != nullptr)
 					child[4]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[5] != NULL)
+				if(child[5] != nullptr)
 					child[5]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[6] != NULL)
+				if(child[6] != nullptr)
 					child[6]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
-				if(child[7] != NULL)
+				if(child[7] != nullptr)
 					child[7]->addIntoTable(ps, table, tableSize, x, y, z, r, sizeX, sizeY, sizeZ);
 			}
 		}
@@ -435,7 +421,7 @@ void OctTree::Cell::addLeafSize(float sizeX, float sizeY, float sizeZ, int &coun
 	}
 	else{
 		for(int i=0; i<8; i++){
-			if(child[i] != NULL)
+			if(child[i] != nullptr)
 				child[i]->addLeafSize(sizeX, sizeY, sizeZ, count, sum);
 		}
 	}
@@ -451,7 +437,7 @@ void OctTree::Cell::computeCenter(PointSet* ps)
 {
 	p[0] = p[1] = p[2] = 0;
 	n[0] = n[1] = n[2] = 0;
-	if(isLeaf){	
+	if(isLeaf){
 		for(int i=0; i<index_N; i++){
 			float *q = ps->point[index[i]];
 			float *m = ps->normal[index[i]];
@@ -469,13 +455,13 @@ void OctTree::Cell::computeCenter(PointSet* ps)
 
 		int i;
 		for(i=0; i<8; i++){
-			if(child[i] != NULL)
+			if(child[i] != nullptr)
 				child[i]->computeCenter(ps);
 		}
 
 		index_N = 0;
 		for(i=0; i<8; i++){
-			if(child[i] == NULL)
+			if(child[i] == nullptr)
 				continue;
 			int w = child[i]->index_N;
 			float *q = child[i]->p;
@@ -513,7 +499,7 @@ void OctTree::Cell::normalizeNormals()
 	}
 	if(!isLeaf){
 		for(int i=0; i<8; i++){
-			if(child[i] != NULL)
+			if(child[i] != nullptr)
 				child[i]->normalizeNormals();
 		}
 	}
@@ -521,13 +507,13 @@ void OctTree::Cell::normalizeNormals()
 
 
 
-void OctTree::getPointList(int &size, float **&p_list, float **&n_list, 
+void OctTree::getPointList(int &size, float **&p_list, float **&n_list,
 						  float x, float y, float z, float r, int max)
 {
 	size = 0;
-	if(point_list == NULL)
+	if(point_list == nullptr)
 		point_list = new float*[ps->point_N];
-	if(normal_list == NULL)
+	if(normal_list == nullptr)
 		normal_list = new float*[ps->point_N];
 
 	root->addPointIntoList(ps, size, point_list, normal_list, x, y, z, r, max);
@@ -537,12 +523,12 @@ void OctTree::getPointList(int &size, float **&p_list, float **&n_list,
 }
 
 
-void OctTree::Cell::addPointIntoList(PointSet* ps, int &size, float **p_list, float **n_list, 
+void OctTree::Cell::addPointIntoList(PointSet* ps, int &size, float **p_list, float **n_list,
 									 float x, float y, float z, float r, int max)
 {
 	if(level < max && !isLeaf){
 		for(int i=0; i<8; i++){
-			if(child[i] != NULL)
+			if(child[i] != nullptr)
 				child[i]->addPointIntoList(ps, size, p_list, n_list, x, y, z, r, max);
 		}
 	}
@@ -560,7 +546,7 @@ void OctTree::Cell::addPointIntoList(PointSet* ps, int &size, float **p_list, fl
 			p_list[size] = ps->point[index[i]];
 			n_list[size] = ps->normal[index[i]];
 			size++;
-		}		
+		}
 	}
 }
 
@@ -585,7 +571,7 @@ void OctTree::Cell::computeCellPoint(PointSet *ps, double *&Q)
 			MATRIX(Qi, md, dot);
 			MAT_SUM(Q, Qi);
 		}
-		
+
 		double min = Q_ERR(Q, ps->point[index[0]]);
 		int min_i = 0;
 		for(i=1; i<index_N; i++){
@@ -616,7 +602,7 @@ void OctTree::Cell::computeCellPoint(PointSet *ps, double *&Q)
 		double min = 1000000000;
 		int min_i = 0;
 		for(i=0; i<8; i++){
-			if(child[i] == NULL)
+			if(child[i] == nullptr)
 				continue;
 			if(child[i]->index_N == 0)
 				continue;
@@ -650,7 +636,7 @@ void OctTree::Cell::splitChild(int M, PointSet *ps, float sizeX, float sizeY, fl
 {
 	if(!isLeaf){
 		for(int i=0; i<8; i++){
-			if(child[i] != NULL)
+			if(child[i] != nullptr)
 				child[i]->splitChild(M, ps, sizeX, sizeY, sizeZ);
 		}
 	}
@@ -663,7 +649,7 @@ void OctTree::Cell::splitChild(int M, PointSet *ps, float sizeX, float sizeY, fl
 		for(i=0; i<8; i++){
 			if(child[i]->index_N == 0){
 				delete child[i];
-				child[i] = NULL;
+				child[i] = nullptr;
 			}
 			else
 				child[i]->splitChild(M, ps, sizeX, sizeY, sizeZ);
@@ -682,7 +668,7 @@ void OctTree::Cell::cleanChild()
 		for(int i=0; i<8; i++){
 			if(child[i]->isLeaf && child[i]->index_N == 0){
 				delete child[i];
-				child[i] = NULL;
+				child[i] = nullptr;
 			}
 			else
 				child[i]->cleanChild();
@@ -701,18 +687,18 @@ void OctTree::Cell::addDoubledPointIntoList(PointSet *ps, int &size, float (*&p_
 {
 	if(!isLeaf){
 		for(int i=0; i<8; i++){
-			if(child[i] != NULL)
+			if(child[i] != nullptr)
 				child[i]->addDoubledPointIntoList(ps, size, p_list, value, off);
 		}
 	}
 	else if(index_N != 0){
 		for(int i=0; i<index_N; i++){
-			
+
 			p_list[size] = ps->point[index[i]];
 			n_list[size] = ps->normal[index[i]];
 			size++;
 		}
-		
+
 	}
 }
 */

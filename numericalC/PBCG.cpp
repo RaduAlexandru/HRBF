@@ -10,15 +10,15 @@ static char THIS_FILE[]=__FILE__;
 
 PBCG::PBCG()
 {
-	sa = NULL;
-	ija = NULL;
+	sa = nullptr;
+	ija = nullptr;
 }
 
 PBCG::~PBCG()
 {
-	if(sa != NULL)
+	if(sa != nullptr)
 		delete sa;
-	if(ija != NULL)
+	if(ija != nullptr)
 		delete ija;
 }
 

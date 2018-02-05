@@ -30,8 +30,8 @@ public:
     
     _leaf = true;
     
-    _fore = NULL;
-    _back = NULL;
+    _fore = nullptr;
+    _back = nullptr;
   }
   
   ~AxisKdCell(){
@@ -50,10 +50,10 @@ public:
   
   void build(){
     if(split()){
-      if(_fore != NULL){
+      if(_fore != nullptr){
         _fore->build();
       }
-      if(_back != NULL){
+      if(_back != nullptr){
         _back->build();
       }
     }

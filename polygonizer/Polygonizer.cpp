@@ -3,8 +3,8 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "Polygonizer.h"
-#include "../numericalC/SVD.h"
-#include "../DataStructure/PolygonalMesh.h"
+#include "SVD.h"
+#include "PolygonalMesh.h"
 
 
 #include "time.h"
@@ -59,7 +59,7 @@ inline void Polygonizer::weightD(float g[], double d2, double R2, float vx, floa
 	double t = -20.0*s3*invT2;
 	g[0] = (float)(vx * t);
 	g[1] = (float)(vy * t);
-	g[2] = (float)(vz * t);	
+	g[2] = (float)(vz * t);
 }
 inline float Polygonizer::value(float vx, float vy, float vz, float nx, float ny, float nz, double R2, bool &isValid)
 {
@@ -69,7 +69,7 @@ inline float Polygonizer::value(float vx, float vy, float vz, float nx, float ny
 		isValid = false;
 		return 0;
 	}
-	
+
 	isValid = true;
 	float g[3];
 	weightD(g, d2, R2, vx, vy, vz);
@@ -131,7 +131,7 @@ PolygonalMesh* Polygonizer::dualContouring(float epsilon, float tau)
 			for(int k=0; k<dimX+1; k++)
 			{
 				p[0] = originX + k*spaceX;
-				isIn[i][j][k] 
+				isIn[i][j][k]
 					= (func->value(p[0], p[1], p[2], isValid[i][j][k])>0);
 
 			}
@@ -142,7 +142,7 @@ PolygonalMesh* Polygonizer::dualContouring(float epsilon, float tau)
 	//printf("Time: %f\n", during*0.001f);
 
 	//printf("The dimension: %d %d %d\n", dimX, dimY, dimZ);
-/*	
+/*
 //---------------------------------------------------
 	//	write the distance field to a file
 
@@ -161,8 +161,8 @@ PolygonalMesh* Polygonizer::dualContouring(float epsilon, float tau)
 	//fwrite(&originZ, sizeof(float), 1, file);
 
 	//fwrite(&spaceX, sizeof(float), 1, file);	//fprintf(file, "%f %f %f", spaceX, spaceY, spaceZ);
-	//fwrite(&spaceY, sizeof(float), 1, file);	
-	//fwrite(&spaceZ, sizeof(float), 1, file);	
+	//fwrite(&spaceY, sizeof(float), 1, file);
+	//fwrite(&spaceZ, sizeof(float), 1, file);
 	int tempCount = 0;
 	for(i = 0; i< dimZ+1; i++)
 	{
@@ -214,7 +214,7 @@ PolygonalMesh* Polygonizer::dualContouring(float epsilon, float tau)
 	//	fread(ii, sizeof(int), 3, file);
 	//	float tempValue;
 	//	fread(&tempValue, sizeof(float), 1, file);
-	//	
+	//
 	//	printf("%d %d %d %f\n", ii[0], ii[1], ii[2], tempValue);
 	//	count++;
 	//}
@@ -240,7 +240,7 @@ PolygonalMesh* Polygonizer::dualContouring(float epsilon, float tau)
 			for(int k=0; k<dimX-1; k++){
 				if(!isValid[i][j][k] || !isValid[i][j][k+1])
 					continue;
-				if((!isIn[i][j][k] && isIn[i][j][k+1]) || 
+				if((!isIn[i][j][k] && isIn[i][j][k+1]) ||
 				    (isIn[i][j][k] && !isIn[i][j][k+1])){
 					face_X_N++;
 					if(index[i][j][k+1] < 0){
@@ -267,7 +267,7 @@ PolygonalMesh* Polygonizer::dualContouring(float epsilon, float tau)
 			for(int k=0; k<dimY-1; k++){
 				if(!isValid[j][k][i] || !isValid[j][k+1][i])
 					continue;
-				if((!isIn[j][k][i] && isIn[j][k+1][i]) || 
+				if((!isIn[j][k][i] && isIn[j][k+1][i]) ||
 				    (isIn[j][k][i] && !isIn[j][k+1][i])){
 					face_Y_N++;
 					if(index[j][k+1][i] < 0){
@@ -294,7 +294,7 @@ PolygonalMesh* Polygonizer::dualContouring(float epsilon, float tau)
 			for(int k=0; k<dimZ-1; k++){
 				if(!isValid[k][i][j] || !isValid[k+1][i][j])
 					continue;
-				if((!isIn[k][i][j] && isIn[k+1][i][j]) || 
+				if((!isIn[k][i][j] && isIn[k+1][i][j]) ||
 				    (isIn[k][i][j] && !isIn[k+1][i][j])){
 					face_Z_N++;
 					if(index[k+1][i][j] < 0){
@@ -391,7 +391,7 @@ PolygonalMesh* Polygonizer::dualContouring(float epsilon, float tau)
 		s[1] = e[1] = originY + jj*spaceY;
 		s[2] = e[2] = originZ + ii*spaceZ;
 		bisection(p, s, e, epsilon);
-		
+
 		//float g[3];
 		//func->gradient(g, p[0], p[1], p[2]);
 		//double len = PolygonalMesh::LENGTH(g);
@@ -481,7 +481,7 @@ PolygonalMesh* Polygonizer::dualContouring(float epsilon, float tau)
 		s[2] = e[2] = originZ + jj*spaceZ;
 		s[0] = e[0] = originX + ii*spaceX;
 		bisection(p, s, e, epsilon);
-		
+
 		//float g[3];
 		//func->gradient(g, p[0], p[1], p[2]);
 		//double len = PolygonalMesh::LENGTH(g);
@@ -496,7 +496,7 @@ PolygonalMesh* Polygonizer::dualContouring(float epsilon, float tau)
 		//double d = -PolygonalMesh::DOT(nor, p);
 		//double Q_tmp[10];
 		//MATRIX(Q_tmp, nor, d);
-		
+
 		int i0 = index[jj][kk+1][ii];
 		//MAT_SUM(Q[i0], Q_tmp);
 		vertex[i0][0] += p[0];
@@ -572,7 +572,7 @@ PolygonalMesh* Polygonizer::dualContouring(float epsilon, float tau)
 		s[0] = e[0] = originX + jj*spaceX;
 		s[1] = e[1] = originY + ii*spaceY;
 		bisection(p, s, e, epsilon);
-		
+
 		//float g[3];
 		//func->gradient(g, p[0], p[1], p[2]);
 		//double len = PolygonalMesh::LENGTH(g);
@@ -616,9 +616,9 @@ PolygonalMesh* Polygonizer::dualContouring(float epsilon, float tau)
 		vertex[i0][2] += p[2];
 		degree[i0]++;
 	}
-	
+
 	//FOR SVD
-			
+
 	//float **A = new float*[4];
 	//A[1] = new float[4];
 	//A[2] = new float[4];
@@ -653,7 +653,7 @@ PolygonalMesh* Polygonizer::dualContouring(float epsilon, float tau)
 //		b[3] = -(float)Q[i][8] - Av[2];
 //
 //		SVD::svdcmp(A, 3, 3, w, v);
-//		
+//
 //		float wmax=0.0f;
 //		int k;
 //		for (k=1;k<=3;k++)
@@ -668,7 +668,7 @@ PolygonalMesh* Polygonizer::dualContouring(float epsilon, float tau)
 //		/*
 //		for(int k=1;k<=3;k++)
 //			if(fabs(w[k]) < tau) w[k] = 0.0;*/
-//			
+//
 //
 //		SVD::svbksb(A, w, v, 3, 3, b, x);
 //		if(fabs(x[1]) > spaceX || fabs(x[2]) > spaceY || fabs(x[3]) > spaceZ)
@@ -1468,9 +1468,9 @@ void Polygonizer::cutQuad(PolygonalMesh* mesh)
 	mesh->face = new_face;
 	mesh->face_N = 2*face_N;
 	delete[] mesh->normal_f;
-	mesh->normal_f = NULL;
+	mesh->normal_f = nullptr;
 	delete[] mesh->normal;
-	mesh->normal = NULL;
+	mesh->normal = nullptr;
 }
 
 void Polygonizer::searchZero(float p[], float p1[], float p2[], float f1, float f2, float e)
@@ -1583,4 +1583,3 @@ void Polygonizer::searchZero(float p[], float p1[], float p2[], float f1, float 
 	p[1] = p3[1];
 	p[2] = p3[2];
 }
-

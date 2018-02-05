@@ -488,7 +488,7 @@ double distanceToTriangle(int *pos, float q[], float p[], float v0[], float v1[]
 	e2[0] = v2[0]-v0[0];	e2[1] = v2[1]-v0[1];	e2[2] = v2[2]-v0[2];
 
 	//  normal of the triangle plane
-	if(n != NULL)
+	if(n != nullptr)
 	{
 		vC[0] = n[0];	vC[1] = n[1];	vC[2] = n[2];
 	}
@@ -560,7 +560,7 @@ PointTriDist(int *posFlag, PQP_REAL q[3], const PQP_REAL p[3], const PQP_REAL tr
 	//vv1[0] = tri[1][0];	vv1[1] = tri[1][1];	vv1[2] = tri[1][2];
 	//vv2[0] = tri[2][0];	vv2[1] = tri[2][1];	vv2[2] = tri[2][2];
 
-	//double dis = distanceToTriangle(posFlag, qq, pp, vv0, vv1, vv2, NULL);
+	//double dis = distanceToTriangle(posFlag, qq, pp, vv0, vv1, vv2, nullptr);
 	//
 	//q[0] = qq[0];	q[1] = qq[1];	q[2] = qq[2];
 

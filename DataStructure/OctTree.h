@@ -1,13 +1,8 @@
-// OctTree.h: OctTree 
+// OctTree.h: OctTree
 //
 //////////////////////////////////////////////////////////////////////
 
-#if !defined(AFX_OCTTREE_H__B2DDC163_33E0_4996_8D78_7153D535816E__INCLUDED_)
-#define AFX_OCTTREE_H__B2DDC163_33E0_4996_8D78_7153D535816E__INCLUDED_
-
-//#if _MSC_VER > 1000
-//#pragma once
-//#endif // _MSC_VER > 1000
+#pragma once
 
 #include "PointSet.h"
 #include "math.h"
@@ -15,7 +10,7 @@
 #define MAX 8
 #define EPSILON 0.000001
 
-class OctTree  
+class OctTree
 {
 	class Cell{
 		float ox;
@@ -98,7 +93,7 @@ public:
 	}
 
 	static inline double DET(double A[10]){
-		return A[0]*A[3]*A[5] + 2.0*A[1]*A[4]*A[2] 
+		return A[0]*A[3]*A[5] + 2.0*A[1]*A[4]*A[2]
 			-A[2]*A[2]*A[3] - A[1]*A[1]*A[5] - A[4]*A[4]*A[0];
 	}
 
@@ -187,7 +182,7 @@ public:
 		return v[0]*(A[0]*v[0] + A[1]*v[1] + A[2]*v[2]) +
 			   v[1]*(A[1]*v[0] + A[3]*v[1] + A[4]*v[2]) +
 			   v[2]*(A[2]*v[0] + A[4]*v[1] + A[5]*v[2]) +
-			   2.0*(A[6]*v[0] + A[7]*v[1] + A[8]*v[2]) + 
+			   2.0*(A[6]*v[0] + A[7]*v[1] + A[8]*v[2]) +
 			   A[9];
 	}
 
@@ -195,9 +190,7 @@ public:
 		return v[0]*(A[0]*v[0] + A[1]*v[1] + A[2]*v[2]) +
 			   v[1]*(A[1]*v[0] + A[3]*v[1] + A[4]*v[2]) +
 			   v[2]*(A[2]*v[0] + A[4]*v[1] + A[5]*v[2]) +
-			   2.0*(A[6]*v[0] + A[7]*v[1] + A[8]*v[2]) + 
+			   2.0*(A[6]*v[0] + A[7]*v[1] + A[8]*v[2]) +
 			   A[9];
 	}
 };
-
-#endif // !defined(AFX_OCTTREE_H__B2DDC163_33E0_4996_8D78_7153D535816E__INCLUDED_)

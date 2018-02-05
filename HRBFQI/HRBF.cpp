@@ -1,10 +1,12 @@
 #include "stdafx.h"
 #include "HRBF.h"
 #include "math.h"
-#include "../numericalC/PBCG.h"
-#include "../numericalC/LU.h"
+#include "PBCG.h"
+#include "LU.h"
 #include <float.h>
 #include <iostream>
+#include <cmath>
+#include <cstring>
 #include "omp.h"
 
 using namespace std;
@@ -14,8 +16,8 @@ using namespace std;
 
 HRBF::HRBF(void)
 {
-	tree = NULL;
-	sol = NULL;
+	tree = nullptr;
+	sol = nullptr;
 
 	thread_num = THREADS_NUM;	//	THREADS_NUM is defined in StdAfx.h
 
@@ -23,9 +25,9 @@ HRBF::HRBF(void)
 
 HRBF::~HRBF(void)
 {
-	if(tree != NULL)
+	if(tree != nullptr)
 		delete tree;
-	if(sol != NULL)
+	if(sol != nullptr)
 		delete sol;
 }
 inline void HRBF::weightD(float *w, float g[], double d2, float vx, float vy, float vz)
@@ -83,7 +85,7 @@ inline void HRBF::weightH(float h[], double d2, float vx, float vy, float vz)
 	if(d2 == 0.0)
 	{
 		h[0] = h[4] = h[8] = -20.0/T2;
-		h[1] = h[2] = h[3] = h[5] = h[6] = h[7] = 0.0;		
+		h[1] = h[2] = h[3] = h[5] = h[6] = h[7] = 0.0;
 		return;
 	}
 
@@ -118,7 +120,7 @@ inline void HRBF::weightDH(float g[], float h[], double d2, float vx, float vy, 
 	{
 		g[0] = g[1] = g[2] = 0.0f;
 		h[0] = h[4] = h[8] = -20.0/T2;
-		h[1] = h[2] = h[3] = h[5] = h[6] = h[7] = 0.0;		
+		h[1] = h[2] = h[3] = h[5] = h[6] = h[7] = 0.0;
 
 		return;
 	}
@@ -164,7 +166,7 @@ inline void HRBF::weightDH(float *w, float g[], float h[], double d2, float vx, 
 		*w = 1.0f;
 		g[0] = g[1] = g[2] = 0.0f;
 		h[0] = h[4] = h[8] = -20.0/T2;
-		h[1] = h[2] = h[3] = h[5] = h[6] = h[7] = 0.0;		
+		h[1] = h[2] = h[3] = h[5] = h[6] = h[7] = 0.0;
 		return;
 	}
 	double invT2 = 1.0/T2;
@@ -198,18 +200,18 @@ inline void HRBF::weightDH(float *w, float g[], float h[], double d2, float vx, 
 }
 
 
-inline double HRBF::weight(double d2)
+double HRBF::weight(double d2)
 {
 	if(T2 < d2)
 		return 0;
-	
+
 	double r = sqrt(d2/T2);
 	return pow(1.0 - r, 4)*(4.0*r + 1.0);
 }
 float HRBF::value(float x, float y, float z)
 {
 	double f = 0;
-	
+
 	int size, i;
 
 	int table[4000];
@@ -281,7 +283,7 @@ float HRBF::valueMP(float x, float y, float z, int *tb)
 
 	int size, i, j;
 	int* table = tb;
-	if(table == NULL)
+	if(table == nullptr)
 		table = tree->getIndexTable(size, x, y, z, support);
 	else
 		tree->getIndexTable(table, size, x, y, z, support);
@@ -342,7 +344,7 @@ void HRBF::gradient(float g[], float x, float y, float z)
 	}
 	g[0] += (float)g1[0];
 	g[1] += (float)g1[1];
-	g[2] += (float)g1[2];		
+	g[2] += (float)g1[2];
 }
 float HRBF::valueAndGradient(float g[], float x, float y, float z)
 {
@@ -352,7 +354,7 @@ float HRBF::valueAndGradient(float g[], float x, float y, float z)
 
 	int size, j, i;
 	int* table = tree->getIndexTable(size, x, y, z, support);
-	
+
 	float vx, vy, vz;
 	double d2;
 	float *c;
@@ -374,7 +376,7 @@ float HRBF::valueAndGradient(float g[], float x, float y, float z)
 
 		d2 = vx*vx + vy*vy + vz*vz;
 		weightDH(&w, gw, hw, d2, vx, vy, vz);
-		
+
 		f1+= w*sol[jj+1] - gw[0]*sol[jj+2] - gw[1]*sol[jj+3] - gw[2]*sol[jj+4];
 		g1[0] += sol[jj+1]*gw[0]-sol[jj+2]*hw[0]-sol[jj+3]*hw[1]-sol[jj+4]*hw[2];
 		g1[1] += sol[jj+1]*gw[1]-sol[jj+2]*hw[3]-sol[jj+3]*hw[4]-sol[jj+4]*hw[5];
@@ -383,7 +385,7 @@ float HRBF::valueAndGradient(float g[], float x, float y, float z)
 	f += f1;
 	g[0] += (float)g1[0];
 	g[1] += (float)g1[1];
-	g[2] += (float)g1[2];		
+	g[2] += (float)g1[2];
 
 	return (float)f;
 }
@@ -422,7 +424,7 @@ int HRBF::getMaximalNeighborsInSupport(float T)
 	{
 		int size = 0;
 		float *c = ps->point[i];
-		 
+
 		int thread_index = omp_get_thread_num();
 
 		tree->getIndexTable(neiTable[thread_index], size, c[0], c[1], c[2], T);
@@ -462,7 +464,7 @@ void HRBF::fit(float support, float nsmooth)
 	T2 = support*support;
 	this->computeSolutionQI(nsmooth);
 }
-	
+
 void HRBF::computeSolution(float nsmooth)
 {
 	return;
@@ -471,7 +473,7 @@ void HRBF::computeSolution(float nsmooth)
 	int point_N = ps->point_N;
 
 	int coefNum = point_N*4;//+4;
-	if(sol != NULL)
+	if(sol != nullptr)
 		delete[] sol;
 	sol = new double[coefNum+1];
 
@@ -485,7 +487,7 @@ void HRBF::computeSolution(float nsmooth)
 		int* t = tree->getIndexTable(size, c[0], c[1], c[2], support);
 		total += size;
 	}
-	
+
 	unsigned long totalNum = total*16 - point_N*12;// + point_N*14;
 	cout<<"totalNum = "<< totalNum<<endl;
 	PBCG solver;
@@ -568,7 +570,7 @@ void HRBF::computeSolution(float nsmooth)
 		int pos_z = 12*(m-1);
 		double sumW = 0;
 		float sumWD[3] = {0.0f, 0.0f, 0.0f};
-		
+
 		//for(j=0; j<m; j++)
 		//{
 		//	int k = t[j];
@@ -694,7 +696,7 @@ void HRBF::computeSolution(float nsmooth)
 
 				sa[pos_z+kk] = -hw[7];//vy*g[2]*invSumW - vy*normW*normSumWD[2];
 				ija[pos_z+kk] = k4+3;
-				
+
 				//	z part
 				kk++;
 				sa[kk] = -gw[2];//normW*vz;
@@ -716,7 +718,7 @@ void HRBF::computeSolution(float nsmooth)
 		ija[ii+3]=pos_x+kk+1;
 		ija[ii+4]=pos_y+kk+1;
 		ija[ii+5]=pos_z+kk+1;
-		
+
 		kk = pos_z+kk;
 
 		if(m != 0)
@@ -743,7 +745,7 @@ void HRBF::computeSolution(float nsmooth)
 //			fprintf(file, "%f ", sa_bk[i][j]);
 //		}
 //		fprintf(file, "\n");
-//	}	
+//	}
 //	fclose(file);
 //
 //	for(i = 0; i< coefNum; i++)
@@ -762,14 +764,16 @@ void HRBF::computeSolutionQI(float nsmooth)
 	int point_N = ps->point_N;
 
 	int coefNum = point_N*4;
-	if(sol != NULL)
+	if(sol != nullptr)
 		delete[] sol;
 	sol = new double[coefNum+1];
 
 	float (*point)[3] = ps->point;
 	float (*normal)[3] = ps->normal;
 
-	double regular_coef = 1.0;///(nsmooth + 20.0/T2);
+	// double regular_coef = 1.0;///(nsmooth + 20.0/T2);
+	double regular_coef = nsmooth + 20.0/T2;///(nsmooth + 20.0/T2);
+	// std::cout << "regular coeff " << regular_coef << '\n';
 #pragma omp parallel for schedule(dynamic)
 	for(i = 0; i< point_N; i++)
 	{
@@ -826,9 +830,9 @@ PolygonalMesh* HRBF::generateCrossSection(float o[], float t1[], float t2[], int
 
 			bool flag;
 			float f = value(vertex[index][0], vertex[index][1], vertex[index][2], flag);//);//
-			
 
-			if(_isnan(f)){
+
+			if(std::isnan(f)){
 				v[index] = 0;
 				continue;
 			}
@@ -838,7 +842,7 @@ PolygonalMesh* HRBF::generateCrossSection(float o[], float t1[], float t2[], int
 			vertex[index][1] += f*(float)t3[1];
 			vertex[index][2] += f*(float)t3[2];
 			*/
-			
+
 			v[index] = f;
 			mesh->isCovered[index] = flag;
 			//if(!flag)
@@ -857,7 +861,7 @@ PolygonalMesh* HRBF::generateCrossSection(float o[], float t1[], float t2[], int
 			face[index][1] = (i+1)*m+j+1;
 			face[index][0] = i*m+j+1;
 			//bool flag = (v[face[index][0]] > 0);
-			
+
 			/*
 			if(PolygonalMesh::LENGTH(vertex[face[index][0]]) > 5 ||
 				PolygonalMesh::LENGTH(vertex[face[index][1]]) > 5 ||
@@ -866,13 +870,13 @@ PolygonalMesh* HRBF::generateCrossSection(float o[], float t1[], float t2[], int
 				face[index][0] = -1;
 				*/
 			/*
-			for(int k=1; k<4; k++){ 
+			for(int k=1; k<4; k++){
 				if(flag != (v[face[index][k]] > 0)){
 					v[i*n+j] = -100;
 				}
 			}*/
 			/*
-			if(v[face[index][0]] == v[face[index][1]] 
+			if(v[face[index][0]] == v[face[index][1]]
 				== v[face[index][2]] == v[face[index][3]] == 0)
 				v[i*n+j] = 1000000;*/
 		}

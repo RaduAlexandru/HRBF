@@ -5,22 +5,7 @@
 
 #pragma once
 
-#ifndef _WIN32_WINNT		// Allow use of features specific to Windows XP or later.                   
-#define _WIN32_WINNT 0x0501	// Change this to the appropriate value to target other versions of Windows.
-#endif						
 
-//#include <stdio.h>
-//#include <tchar.h>
-
-#define VC_EXTRALEAN		// 
-
-#include <afxwin.h>         // 
-#include <afxext.h>         // 
-#include <afxdisp.h>        // 
-#include <afxdtctl.h>		// 
-#ifndef _AFX_NO_AFXCMN_SUPPORT
-#include <afxcmn.h>			// 
-#endif // _AFX_NO_AFXCMN_SUPPORT
 
 #define THREADS_NUM	8
 #define MAX_NEIGHBOURS_NUM 10000

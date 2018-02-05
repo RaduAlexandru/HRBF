@@ -1,5 +1,5 @@
 #pragma once
-#include "../DataStructure/PolygonalMesh.h"
+#include "PolygonalMesh.h"
 #include "HRBF.h"
 
 class CMeshCleaner
